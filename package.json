@@ -1,0 +1,27 @@
+{
+    "name": "todo-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "parcel"
+    },
+    "source": "src/index.html",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/brandonpretelt/todo-app.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/brandonpretelt/todo-app/issues"
+    },
+    "homepage": "https://github.com/brandonpretelt/todo-app#readme",
+    "dependencies": {
+        "uuid": "^9.0.0"
+    },
+    "devDependencies": {
+        "parcel": "^2.7.0"
+    }
+}
