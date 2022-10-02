@@ -1,3 +1,6 @@
+// TODO: write render function when it's time
+// TODO: use dataset attribute for html
+
 import todoModel from './js/todoModel.js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -14,12 +17,21 @@ function addTodo(arr) {
         return {
             id: item.id,
             content: item.content,
-            done: item.done,
-            categories: item.categories
+            done: item.done
         };
     });
+    categories: item.categories;
 
     inputTextValue.value = '';
-    // write render function when it's time
     render(todoList, newTodo);
+}
+
+function completeTodo(todoItem) {
+    if (todoItem.done === 'true') {
+        todoItem.classList.add('done');
+    }
+}
+
+function getId(element, dataValue) {
+    return parseInt(element.dataset[dataValue]);
 }
