@@ -1,6 +1,11 @@
 # Todo App Todo List:
 
-[ ] - styles
-[ ] - render function
-[ ] - second function for data model
-[x] - data model
+## TODO 
+
+- [ ] styles
+- [ ] render function
+- [ ] second function for data model
+
+## FINISHED 
+
+- [x] data model
