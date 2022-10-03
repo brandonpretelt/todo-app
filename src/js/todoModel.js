@@ -1,6 +1,6 @@
 const todosModel = [
     {
-        id: '',
+        id: '0',
         content: '',
         done: false,
         categories: []

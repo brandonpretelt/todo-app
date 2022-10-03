@@ -538,68 +538,70 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _todoModelJs = require("./js/todoModel.js");
 var _todoModelJsDefault = parcelHelpers.interopDefault(_todoModelJs);
 var _uuid = require("uuid");
+let todos = [
+    ...(0, _todoModelJsDefault.default)
+];
 const addTodoBtn = document.querySelector("button");
 addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
-    addTodo((0, _todoModelJsDefault.default));
+    // addTodo(todoModel);
+    addTodo(todos);
+});
+document.addEventListener("dblclick", (e)=>{
+    const doneList = document.querySelector(".done-list");
+    if (e.target.nodeName === "LI") {
+        e.target.classList.add("done");
+        e.target.nextElementSibling.remove();
+        e.target.remove();
+        doneList.append(e.target);
+    }
 });
 document.addEventListener("click", (e)=>{
     if (e.target.nodeName === "BUTTON") {
+        const userInputEdit = e.target.previousElementSibling;
         if (e.target.hasAttribute("data-btn")) {
-            const todoId = getId(e.target.previousElementSibling, "todoid");
-            e.target.previousElementSibling.classList.toggle("edit");
-            editTodo(todoId, (0, _todoModelJsDefault.default), e.target.previousElementSibling);
-            e.target.textContent = "Save";
+            const todoId = getId(userInputEdit, "todoid");
+            userInputEdit.classList.toggle("edit");
+            editTodo(todoId, (0, _todoModelJsDefault.default), userInputEdit);
+        }
+        if (userInputEdit.classList.contains("done")) {
+            userInputEdit.removeAttribute("contenteditable");
+            userInputEdit.classList.remove("edit");
         }
     }
 });
-function addTodo(arr) {
-    let inputTextValue = document.querySelector("input");
+function addTodo(arr, todoName) {
+    todoName = document.querySelector("input");
     const todoList = document.querySelector(".todo-list");
-    if (inputTextValue.value === "") return;
-    let newTodo = arr.map((item)=>{
-        item.id = (0, _uuid.v4)();
-        item.content = inputTextValue.value;
-        item.done = false;
-        item.categories = [];
-        return {
-            id: item.id,
-            content: item.content,
-            done: item.done,
-            categories: item.categories
-        };
-    });
-    inputTextValue.value = "";
-    render(todoList, newTodo);
+    if (todoName.value === "") return;
+    let newTodo = {
+        id: (0, _uuid.v4)(),
+        content: todoName.value,
+        done: false,
+        categories: []
+    };
+    todos.push(newTodo);
+    console.log(arr);
+    todoName.value = "";
+    render(todoList, arr);
 }
 function editTodo(id, arr, el) {
     el.setAttribute("contenteditable", true);
     const todoItem = arr.find((item)=>{
-        if (item.id === id) {
-            console.log(item.content);
-            item.content = el.textContent;
-        }
+        if (item.id === id) item.content = el.textContent;
     });
-    // arr.push({
-    //     ...todoModel,
-    //     content: todoItem.content
-    // });
-    console.log(todoItem);
-    console.log(arr);
-}
-function completeTodo(todoItem) {
-    if (todoItem.done === "true") todoItem.classList.add("done");
 }
 function render(parent, arr) {
-    let li;
+    parent.innerHTML = "";
     arr.forEach((item)=>{
         li = `<li 
             data-todoID=${item.id} 
             class=${item.done ? "done" : ""}
-            contenteditable="true">${item.content ? item.content : "no no no"}</li><button data-btn="edit-btn">Edit Me</button> `;
+            contenteditable="true"> ${item.content}</li><button data-btn="edit-btn">Edit Me</button>`;
         parent.insertAdjacentHTML("beforeend", li);
     });
-}
+/*     console.log(arr.length);
+    console.log(arr); */ }
 function getId(element, dataValue) {
     return element.dataset[dataValue];
 }
@@ -610,7 +612,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>todosModel);
 const todosModel = [
     {
-        id: "",
+        id: "0",
         content: "",
         done: false,
         categories: []
