@@ -533,6 +533,8 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"8lqZg":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+// TODO: write render function when it's time
+// TODO: use dataset attribute for html
 var _todoModelJs = require("./js/todoModel.js");
 var _todoModelJsDefault = parcelHelpers.interopDefault(_todoModelJs);
 var _uuid = require("uuid");
@@ -540,6 +542,16 @@ const addTodoBtn = document.querySelector("button");
 addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
     addTodo((0, _todoModelJsDefault.default));
+});
+document.addEventListener("click", (e)=>{
+    if (e.target.nodeName === "BUTTON") {
+        if (e.target.hasAttribute("data-btn")) {
+            const todoId = getId(e.target.previousElementSibling, "todoid");
+            e.target.previousElementSibling.classList.toggle("edit");
+            editTodo(todoId, (0, _todoModelJsDefault.default), e.target.previousElementSibling);
+            e.target.textContent = "Save";
+        }
+    }
 });
 function addTodo(arr) {
     let inputTextValue = document.querySelector("input");
@@ -560,15 +572,36 @@ function addTodo(arr) {
     inputTextValue.value = "";
     render(todoList, newTodo);
 }
+function editTodo(id, arr, el) {
+    el.setAttribute("contenteditable", true);
+    const todoItem = arr.find((item)=>{
+        if (item.id === id) {
+            console.log(item.content);
+            item.content = el.textContent;
+        }
+    });
+    // arr.push({
+    //     ...todoModel,
+    //     content: todoItem.content
+    // });
+    console.log(todoItem);
+    console.log(arr);
+}
+function completeTodo(todoItem) {
+    if (todoItem.done === "true") todoItem.classList.add("done");
+}
 function render(parent, arr) {
     let li;
     arr.forEach((item)=>{
-        li = `<li data-todoID=${item.id} class=${item.done ? "done" : ""}>${item.content ? item.content : "no no no"}</li>`;
+        li = `<li 
+            data-todoID=${item.id} 
+            class=${item.done ? "done" : ""}
+            contenteditable="true">${item.content ? item.content : "no no no"}</li><button data-btn="edit-btn">Edit Me</button> `;
         parent.insertAdjacentHTML("beforeend", li);
     });
 }
 function getId(element, dataValue) {
-    return parseInt(element.dataset[dataValue]);
+    return element.dataset[dataValue];
 }
 
 },{"./js/todoModel.js":"hpFho","uuid":"j4KJi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hpFho":[function(require,module,exports) {
