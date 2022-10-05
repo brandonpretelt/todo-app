@@ -4,34 +4,122 @@
 import todoModel from './js/todoModel.js';
 import { v4 as uuidv4 } from 'uuid';
 
-function addTodo(arr) {
-    let inputTextValue = document.querySelector('input');
-    if (inputTextValue.value === '') return;
+let todos = [...todoModel];
 
-    let newTodo = arr.map((item) => {
-        item.id = uuidv4();
-        item.content = inputTextValue.value;
-        item.done = false;
-        item.categories = [];
+const addTodoBtn = document.querySelector('button');
 
-        return {
-            id: item.id,
-            content: item.content,
-            done: item.done
-        };
-    });
-    categories: item.categories;
+addTodoBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    addTodo(todos);
+    getNumberOfTasks(todos);
+});
 
-    inputTextValue.value = '';
-    render(todoList, newTodo);
+document.addEventListener('dblclick', (e) => {
+    // const doneList = document.querySelector('.done-list');
+    const deleteButton = `<button data-btn="delete-btn">Delete!</button>`;
+    if (e.target.nodeName === 'LI') {
+        e.target.classList.add('done');
+        if (e.target.nextElementSibling) {
+            e.target.nextElementSibling.remove();
+        }
+
+        e.target.insertAdjacentHTML('beforeend', deleteButton);
+    }
+});
+
+document.addEventListener('click', (e) => {
+    const todoList = document.querySelector('.todo-list');
+    if (e.target.dataset.btn === 'edit-btn') {
+        const userInputEdit = e.target.previousElementSibling;
+        if (e.target.hasAttribute('data-btn')) {
+            const todoId = getId(userInputEdit, 'todoid');
+            userInputEdit.classList.toggle('edit');
+            editTodo(todoId, todoModel, userInputEdit);
+        }
+        if (userInputEdit.classList.contains('done')) {
+            userInputEdit.removeAttribute('contenteditable');
+            userInputEdit.classList.remove('edit');
+        }
+    }
+
+    if (e.target.dataset.btn === 'delete-btn') {
+        const id = getId(e.target.parentNode, 'todoid');
+
+        // console.log(newTodos);
+        deleteTodo(todos, id, e.target.parentNode);
+        // console.log(id);
+        // console.log(todos);
+    }
+});
+
+function addTodo(arr, todoName) {
+    todoName = document.querySelector('input');
+    const todoList = document.querySelector('.todo-list');
+    if (todoName.value === '') return;
+
+    let newTodo = {
+        id: uuidv4(),
+        content: todoName.value,
+        done: false,
+        categories: []
+    };
+    todos.push(newTodo);
+
+    todoName.value = '';
+    document.querySelector('.current-tasks').textContent =
+        getNumberOfTasks(todos);
+    render(todoList, arr);
 }
 
-function completeTodo(todoItem) {
-    if (todoItem.done === 'true') {
-        todoItem.classList.add('done');
-    }
+function editTodo(id, arr, el) {
+    el.setAttribute('contenteditable', true);
+
+    const todoItem = arr.find((item) => {
+        if (item.id === id) {
+            item.content = el.textContent;
+        }
+    });
+}
+
+function deleteTodo(arr, id, el) {
+    let newTodos = arr.filter((item) => {
+        if (item.id !== id) {
+            return item;
+        }
+        el.remove();
+        arr.slice(arr.indexOf(item));
+    });
+
+    todos = newTodos;
+
+    document.querySelector('.current-tasks').textContent =
+        getNumberOfTasks(todos);
+    return todos;
+}
+
+function render(parent, arr) {
+    parent.innerHTML = '';
+
+    let li;
+
+    arr.forEach((item) => {
+        li = `<li 
+            data-todoID=${item.id} 
+            class=${item.done ? 'done' : ''}
+            contenteditable="true"> ${
+                item.content
+            }</li><button data-btn="edit-btn">Edit Me</button>`;
+        parent.insertAdjacentHTML('beforeend', li);
+    });
+    /*     console.log(arr.length);
+    console.log(arr); */
+}
+
+function getNumberOfTasks(arr) {
+    console.log(arr.length);
+    return arr.length;
 }
 
 function getId(element, dataValue) {
-    return parseInt(element.dataset[dataValue]);
+    return element.dataset[dataValue];
 }

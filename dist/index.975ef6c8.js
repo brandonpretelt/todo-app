@@ -538,45 +538,112 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _todoModelJs = require("./js/todoModel.js");
 var _todoModelJsDefault = parcelHelpers.interopDefault(_todoModelJs);
 var _uuid = require("uuid");
-function addTodo(arr) {
-    let inputTextValue = document.querySelector("input");
-    if (inputTextValue.value === "") return;
-    let newTodo = arr.map((item1)=>{
-        item1.id = (0, _uuid.v4)();
-        item1.content = inputTextValue.value;
-        item1.done = false;
-        item1.categories = [];
-        return {
-            id: item1.id,
-            content: item1.content,
-            done: item1.done
-        };
-    });
-    categories: item.categories;
-    inputTextValue.value = "";
-    render(todoList, newTodo);
+let todos = [
+    ...(0, _todoModelJsDefault.default)
+];
+const addTodoBtn = document.querySelector("button");
+addTodoBtn.addEventListener("click", (e)=>{
+    e.preventDefault();
+    addTodo(todos);
+    getNumberOfTasks(todos);
+});
+document.addEventListener("dblclick", (e)=>{
+    // const doneList = document.querySelector('.done-list');
+    const deleteButton = `<button data-btn="delete-btn">Delete!</button>`;
+    if (e.target.nodeName === "LI") {
+        e.target.classList.add("done");
+        if (e.target.nextElementSibling) e.target.nextElementSibling.remove();
+        e.target.insertAdjacentHTML("beforeend", deleteButton);
+    }
+});
+document.addEventListener("click", (e)=>{
+    const todoList = document.querySelector(".todo-list");
+    if (e.target.dataset.btn === "edit-btn") {
+        const userInputEdit = e.target.previousElementSibling;
+        if (e.target.hasAttribute("data-btn")) {
+            const todoId = getId(userInputEdit, "todoid");
+            userInputEdit.classList.toggle("edit");
+            editTodo(todoId, (0, _todoModelJsDefault.default), userInputEdit);
+        }
+        if (userInputEdit.classList.contains("done")) {
+            userInputEdit.removeAttribute("contenteditable");
+            userInputEdit.classList.remove("edit");
+        }
+    }
+    if (e.target.dataset.btn === "delete-btn") {
+        const id = getId(e.target.parentNode, "todoid");
+        // console.log(newTodos);
+        deleteTodo(todos, id, e.target.parentNode);
+    // console.log(id);
+    // console.log(todos);
+    }
+});
+function addTodo(arr, todoName) {
+    todoName = document.querySelector("input");
+    const todoList = document.querySelector(".todo-list");
+    if (todoName.value === "") return;
+    let newTodo = {
+        id: (0, _uuid.v4)(),
+        content: todoName.value,
+        done: false,
+        categories: []
+    };
+    todos.push(newTodo);
+    todoName.value = "";
+    document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
+    render(todoList, arr);
 }
-function completeTodo(todoItem) {
-    if (todoItem.done === "true") todoItem.classList.add("done");
+function editTodo(id, arr, el) {
+    el.setAttribute("contenteditable", true);
+    const todoItem = arr.find((item)=>{
+        if (item.id === id) item.content = el.textContent;
+    });
+}
+function deleteTodo(arr, id, el) {
+    let newTodos = arr.filter((item)=>{
+        if (item.id !== id) return item;
+        el.remove();
+        arr.slice(arr.indexOf(item));
+    });
+    todos = newTodos;
+    document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
+    return todos;
+}
+function render(parent, arr) {
+    parent.innerHTML = "";
+    let li;
+    arr.forEach((item)=>{
+        li = `<li 
+            data-todoID=${item.id} 
+            class=${item.done ? "done" : ""}
+            contenteditable="true"> ${item.content}</li><button data-btn="edit-btn">Edit Me</button>`;
+        parent.insertAdjacentHTML("beforeend", li);
+    });
+/*     console.log(arr.length);
+    console.log(arr); */ }
+function getNumberOfTasks(arr) {
+    console.log(arr.length);
+    return arr.length;
 }
 function getId(element, dataValue) {
-    return parseInt(element.dataset[dataValue]);
+    return element.dataset[dataValue];
 }
 
 },{"./js/todoModel.js":"hpFho","uuid":"j4KJi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hpFho":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>todosModel);
+var _uuid = require("uuid");
 const todosModel = [
     {
-        id: "",
-        content: "",
+        id: (0, _uuid.v4)(),
+        content: "random",
         done: false,
         categories: []
     }
 ];
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","uuid":"j4KJi"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a

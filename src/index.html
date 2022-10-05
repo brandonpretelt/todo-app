@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do App</title>
+    <link rel="stylesheet" href="css/styles.css">
     <script src="index.js" defer type="module"></script>
 </head>
 
@@ -13,10 +14,11 @@
     <div class="container">
         <header>
             <h1> To Do App </h1>
+
         </header>
         <main>
             <h2> Add A Task </h2>
-
+            <p> To mark a task as done, please double click on the item </p>
             <div class="form-container todo-box">
                 <form>
                     <label for="todo-item">Todo:
@@ -26,9 +28,12 @@
                 </form>
             </div>
             <div class="list-container">
+                <h3> On Going: </h3>
                 <ul class="todo-list">
 
                 </ul>
+                <h3> Current Tasks: <span class="current-tasks"></span></h3>
+
             </div>
         </main>
     </div>
