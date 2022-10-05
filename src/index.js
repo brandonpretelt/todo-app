@@ -12,6 +12,7 @@ addTodoBtn.addEventListener('click', (e) => {
     e.preventDefault();
     // addTodo(todoModel);
     addTodo(todos);
+    getNumberOfTasks(todos);
 });
 
 document.addEventListener('dblclick', (e) => {
@@ -70,6 +71,8 @@ function editTodo(id, arr, el) {
 
 function render(parent, arr) {
     parent.innerHTML = '';
+    let li;
+
     arr.forEach((item) => {
         li = `<li 
             data-todoID=${item.id} 
@@ -79,8 +82,10 @@ function render(parent, arr) {
             }</li><button data-btn="edit-btn">Edit Me</button>`;
         parent.insertAdjacentHTML('beforeend', li);
     });
-    /*     console.log(arr.length);
-    console.log(arr); */
+}
+
+function getNumberOfTasks(arr) {
+    console.log(arr.length - 1);
 }
 
 function getId(element, dataValue) {

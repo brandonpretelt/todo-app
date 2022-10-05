@@ -546,6 +546,7 @@ addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
     // addTodo(todoModel);
     addTodo(todos);
+    getNumberOfTasks(todos);
 });
 document.addEventListener("dblclick", (e)=>{
     const doneList = document.querySelector(".done-list");
@@ -593,6 +594,7 @@ function editTodo(id, arr, el) {
 }
 function render(parent, arr) {
     parent.innerHTML = "";
+    let li;
     arr.forEach((item)=>{
         li = `<li 
             data-todoID=${item.id} 
@@ -600,8 +602,10 @@ function render(parent, arr) {
             contenteditable="true"> ${item.content}</li><button data-btn="edit-btn">Edit Me</button>`;
         parent.insertAdjacentHTML("beforeend", li);
     });
-/*     console.log(arr.length);
-    console.log(arr); */ }
+}
+function getNumberOfTasks(arr) {
+    console.log(arr.length - 1);
+}
 function getId(element, dataValue) {
     return element.dataset[dataValue];
 }
@@ -610,16 +614,17 @@ function getId(element, dataValue) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>todosModel);
+var _uuid = require("uuid");
 const todosModel = [
     {
-        id: "0",
-        content: "",
+        id: (0, _uuid.v4)(),
+        content: "random",
         done: false,
         categories: []
     }
 ];
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","uuid":"j4KJi"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
