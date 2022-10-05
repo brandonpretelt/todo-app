@@ -3,7 +3,8 @@
 ## TODO
 
 -   [ ] styles
--   [ ] add deleted feature
+-   [ ] add a done section for todos
+-   [ ] add clear finished todos
 
 ## FINISHED
 
@@ -11,3 +12,5 @@
 -   [x] second function for data model
 -   [x] render function
 -   [x] edit feature
+-   [x] add deleted feature
+-   [x] add view current tasks
