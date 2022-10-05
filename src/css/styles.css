@@ -11,3 +11,7 @@ li>button {
     color: rgb(0 0 0 / 0.5);
     border: solid 3px black;
 }
+
+.done {
+    text-decoration: line-through;
+}

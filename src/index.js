@@ -10,22 +10,26 @@ const addTodoBtn = document.querySelector('button');
 
 addTodoBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    // addTodo(todoModel);
     addTodo(todos);
+    getNumberOfTasks(todos);
 });
 
 document.addEventListener('dblclick', (e) => {
-    const doneList = document.querySelector('.done-list');
+    // const doneList = document.querySelector('.done-list');
+    const deleteButton = `<button data-btn="delete-btn">Delete!</button>`;
     if (e.target.nodeName === 'LI') {
         e.target.classList.add('done');
-        e.target.nextElementSibling.remove();
-        e.target.remove();
-        doneList.append(e.target);
+        if (e.target.nextElementSibling) {
+            e.target.nextElementSibling.remove();
+        }
+
+        e.target.insertAdjacentHTML('beforeend', deleteButton);
     }
 });
 
 document.addEventListener('click', (e) => {
-    if (e.target.nodeName === 'BUTTON') {
+    const todoList = document.querySelector('.todo-list');
+    if (e.target.dataset.btn === 'edit-btn') {
         const userInputEdit = e.target.previousElementSibling;
         if (e.target.hasAttribute('data-btn')) {
             const todoId = getId(userInputEdit, 'todoid');
@@ -37,13 +41,21 @@ document.addEventListener('click', (e) => {
             userInputEdit.classList.remove('edit');
         }
     }
+
+    if (e.target.dataset.btn === 'delete-btn') {
+        const id = getId(e.target.parentNode, 'todoid');
+
+        // console.log(newTodos);
+        deleteTodo(todos, id, e.target.parentNode);
+        // console.log(id);
+        // console.log(todos);
+    }
 });
 
 function addTodo(arr, todoName) {
     todoName = document.querySelector('input');
     const todoList = document.querySelector('.todo-list');
     if (todoName.value === '') return;
-    // if (inputTextValue.value === '') return;
 
     let newTodo = {
         id: uuidv4(),
@@ -53,44 +65,9 @@ function addTodo(arr, todoName) {
     };
     todos.push(newTodo);
 
-    /* let newTodo = arr.map((item) => {
-        item.id = uuidv4();
-        item.content = inputTextValue.value;
-        item.done = false;
-        item.categories = [];
-
-        return {
-            id: item.id,
-            content: item.content,
-            done: item.done,
-            categories: item.categories
-        };
-    });
-    console.log(todos); */
-    /*   let newTodo = {
-        id: uuidv4(),
-        content: inputTextValue.value,
-        done: false,
-        categories: []
-    }; */
-
-    /* let newTodo = arr.map((item) => {
-        item.id = uuidv4();
-        item.content = inputTextValue.value;
-        item.done = false;
-        item.categories = [];
-
-        return {
-            id: item.id,
-            content: item.content,
-            done: item.done,
-            categories: item.categories
-        };
-    }); */
-
-    console.log(arr);
-
     todoName.value = '';
+    document.querySelector('.current-tasks').textContent =
+        getNumberOfTasks(todos);
     render(todoList, arr);
 }
 
@@ -104,8 +81,27 @@ function editTodo(id, arr, el) {
     });
 }
 
+function deleteTodo(arr, id, el) {
+    let newTodos = arr.filter((item) => {
+        if (item.id !== id) {
+            return item;
+        }
+        el.remove();
+        arr.slice(arr.indexOf(item));
+    });
+
+    todos = newTodos;
+
+    document.querySelector('.current-tasks').textContent =
+        getNumberOfTasks(todos);
+    return todos;
+}
+
 function render(parent, arr) {
     parent.innerHTML = '';
+
+    let li;
+
     arr.forEach((item) => {
         li = `<li 
             data-todoID=${item.id} 
@@ -117,6 +113,11 @@ function render(parent, arr) {
     });
     /*     console.log(arr.length);
     console.log(arr); */
+}
+
+function getNumberOfTasks(arr) {
+    console.log(arr.length);
+    return arr.length;
 }
 
 function getId(element, dataValue) {
