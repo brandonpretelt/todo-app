@@ -533,39 +533,31 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"8lqZg":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+// TODO: write render function when it's time
+// TODO: use dataset attribute for html
 var _todoModelJs = require("./js/todoModel.js");
 var _todoModelJsDefault = parcelHelpers.interopDefault(_todoModelJs);
 var _uuid = require("uuid");
-const addTodoBtn = document.querySelector("button");
-addTodoBtn.addEventListener("click", (e)=>{
-    e.preventDefault();
-    addTodo((0, _todoModelJsDefault.default));
-});
 function addTodo(arr) {
     let inputTextValue = document.querySelector("input");
-    const todoList = document.querySelector(".todo-list");
     if (inputTextValue.value === "") return;
-    let newTodo = arr.map((item)=>{
-        item.id = (0, _uuid.v4)();
-        item.content = inputTextValue.value;
-        item.done = false;
-        item.categories = [];
+    let newTodo = arr.map((item1)=>{
+        item1.id = (0, _uuid.v4)();
+        item1.content = inputTextValue.value;
+        item1.done = false;
+        item1.categories = [];
         return {
-            id: item.id,
-            content: item.content,
-            done: item.done,
-            categories: item.categories
+            id: item1.id,
+            content: item1.content,
+            done: item1.done
         };
     });
+    categories: item.categories;
     inputTextValue.value = "";
     render(todoList, newTodo);
 }
-function render(parent, arr) {
-    let li;
-    arr.forEach((item)=>{
-        li = `<li data-todoID=${item.id} class=${item.done ? "done" : ""}>${item.content ? item.content : "no no no"}</li>`;
-        parent.insertAdjacentHTML("beforeend", li);
-    });
+function completeTodo(todoItem) {
+    if (todoItem.done === "true") todoItem.classList.add("done");
 }
 function getId(element, dataValue) {
     return parseInt(element.dataset[dataValue]);
