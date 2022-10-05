@@ -544,21 +544,21 @@ let todos = [
 const addTodoBtn = document.querySelector("button");
 addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
-    // addTodo(todoModel);
     addTodo(todos);
     getNumberOfTasks(todos);
 });
 document.addEventListener("dblclick", (e)=>{
-    const doneList = document.querySelector(".done-list");
+    // const doneList = document.querySelector('.done-list');
+    const deleteButton = `<button data-btn="delete-btn">Delete!</button>`;
     if (e.target.nodeName === "LI") {
         e.target.classList.add("done");
-        e.target.nextElementSibling.remove();
-        e.target.remove();
-        doneList.append(e.target);
+        if (e.target.nextElementSibling) e.target.nextElementSibling.remove();
+        e.target.insertAdjacentHTML("beforeend", deleteButton);
     }
 });
 document.addEventListener("click", (e)=>{
-    if (e.target.nodeName === "BUTTON") {
+    const todoList = document.querySelector(".todo-list");
+    if (e.target.dataset.btn === "edit-btn") {
         const userInputEdit = e.target.previousElementSibling;
         if (e.target.hasAttribute("data-btn")) {
             const todoId = getId(userInputEdit, "todoid");
@@ -569,6 +569,13 @@ document.addEventListener("click", (e)=>{
             userInputEdit.removeAttribute("contenteditable");
             userInputEdit.classList.remove("edit");
         }
+    }
+    if (e.target.dataset.btn === "delete-btn") {
+        const id = getId(e.target.parentNode, "todoid");
+        deleteTodo(todos, id, e.target.parentNode);
+        console.log(todos);
+    // console.log(id);
+    // console.log(todos);
     }
 });
 function addTodo(arr, todoName) {
@@ -591,6 +598,12 @@ function editTodo(id, arr, el) {
     const todoItem = arr.find((item)=>{
         if (item.id === id) item.content = el.textContent;
     });
+}
+function deleteTodo(arr, id, el) {
+    arr = arr.filter((item)=>{
+        if (item.id === id) el.remove();
+    });
+    return arr.slice;
 }
 function render(parent, arr) {
     parent.innerHTML = "";
