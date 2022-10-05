@@ -44,8 +44,9 @@ document.addEventListener('click', (e) => {
 
     if (e.target.dataset.btn === 'delete-btn') {
         const id = getId(e.target.parentNode, 'todoid');
+
+        // console.log(newTodos);
         deleteTodo(todos, id, e.target.parentNode);
-        console.log(todos);
         // console.log(id);
         // console.log(todos);
     }
@@ -64,9 +65,9 @@ function addTodo(arr, todoName) {
     };
     todos.push(newTodo);
 
-    console.log(arr);
-
     todoName.value = '';
+    document.querySelector('.current-tasks').textContent =
+        getNumberOfTasks(todos);
     render(todoList, arr);
 }
 
@@ -81,16 +82,24 @@ function editTodo(id, arr, el) {
 }
 
 function deleteTodo(arr, id, el) {
-    arr = arr.filter((item) => {
-        if (item.id === id) {
-            el.remove();
+    let newTodos = arr.filter((item) => {
+        if (item.id !== id) {
+            return item;
         }
+        el.remove();
+        arr.slice(arr.indexOf(item));
     });
-    return arr.slice;
+
+    todos = newTodos;
+
+    document.querySelector('.current-tasks').textContent =
+        getNumberOfTasks(todos);
+    return todos;
 }
 
 function render(parent, arr) {
     parent.innerHTML = '';
+
     let li;
 
     arr.forEach((item) => {
@@ -105,7 +114,8 @@ function render(parent, arr) {
 }
 
 function getNumberOfTasks(arr) {
-    console.log(arr.length - 1);
+    console.log(arr.length);
+    return arr.length;
 }
 
 function getId(element, dataValue) {
