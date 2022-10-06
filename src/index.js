@@ -27,7 +27,7 @@ document.addEventListener('dblclick', (e) => {
     const deleteButton = `<button data-btn="delete-btn">Delete!</button>`;
     if (e.target.nodeName === 'LI') {
         e.target.classList.add('done');
-        // e.target.removeAttribute('contenteditable');
+        e.target.removeAttribute('contenteditable');
         if (e.target.nextElementSibling) {
             e.target.nextElementSibling.remove();
         }
@@ -38,15 +38,18 @@ document.addEventListener('dblclick', (e) => {
 
 document.addEventListener('click', (e) => {
     const todoList = document.querySelector('.todo-list');
-    if (e.target.dataset.btn === 'edit-btn') {
+    const editBtn = e.target.dataset.btn;
+    if (editBtn === 'edit-btn') {
         const userInputEdit = e.target.previousElementSibling;
         if (e.target.hasAttribute('data-btn')) {
             const todoId = getId(userInputEdit, 'todoid');
             userInputEdit.classList.toggle('edit');
             editTodo(todoId, todoModel, userInputEdit);
+            e.target.textContent = 'Save';
         }
         if (!userInputEdit.classList.contains('edit')) {
             userInputEdit.setAttribute('contenteditable', 'false');
+            e.target.textContent = 'Edit';
         }
         if (userInputEdit.classList.contains('done')) {
             userInputEdit.removeAttribute('contenteditable');
@@ -136,7 +139,7 @@ function render(parent, arr) {
             contenteditable=${item.done ? 'true' : 'false'}
             data-todoID=${item.id} 
             class=${item.done ? 'done' : ''}
-            > ${item.content}</li><button data-btn="edit-btn">Edit Me</button>`;
+            > ${item.content}</li><button data-btn="edit-btn">Edit</button>`;
         parent.insertAdjacentHTML('beforeend', li);
     });
     /*     console.log(arr.length);

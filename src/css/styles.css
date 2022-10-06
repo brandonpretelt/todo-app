@@ -40,7 +40,7 @@ div form {
 
 form input,
 label {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 form input {
@@ -48,7 +48,7 @@ form input {
     padding: 0.5em 1em;
     border: none;
     border-radius: 3px;
-
+    font-family: 'Rock Salt', system-ui, sans-serif;
 }
 
 ul {
@@ -59,25 +59,34 @@ ul {
 li {
     margin-top: 1em;
     padding: 1em;
-    width: auto;
+    width: 100%;
+    font-family: 'Rock Salt', system-ui, sans-serif;
+    background-color: #fff;
 }
 
 button {
-
     border: none;
     padding: 0.5em 2em;
+}
 
+button:hover {
+
+    box-shadow: inset 0 0 5px 2px rgb(0 0 0 / 0.5);
 }
 
 li,
 button {
     cursor: pointer;
-    background-color: #ccc;
     color: #222;
     border-radius: 4px;
     font-size: 1em;
 }
 
+
+button {
+    background-color: #ccc;
+
+}
 
 /* li,
 li+button {
