@@ -542,16 +542,22 @@ let todos = [
     ...(0, _todoModelJsDefault.default)
 ];
 const addTodoBtn = document.querySelector("button");
+const deleteAllBtn = document.querySelector('button[data-btn="delete-all-btn"]');
 addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
     addTodo(todos);
+    console.log(todos);
     getNumberOfTasks(todos);
+});
+deleteAllBtn.addEventListener("click", ()=>{
+    deleteAll(todos, document.querySelectorAll("li.done"));
 });
 document.addEventListener("dblclick", (e)=>{
     // const doneList = document.querySelector('.done-list');
     const deleteButton = `<button data-btn="delete-btn">Delete!</button>`;
     if (e.target.nodeName === "LI") {
         e.target.classList.add("done");
+        // e.target.removeAttribute('contenteditable');
         if (e.target.nextElementSibling) e.target.nextElementSibling.remove();
         e.target.insertAdjacentHTML("beforeend", deleteButton);
     }
@@ -565,6 +571,7 @@ document.addEventListener("click", (e)=>{
             userInputEdit.classList.toggle("edit");
             editTodo(todoId, (0, _todoModelJsDefault.default), userInputEdit);
         }
+        if (!userInputEdit.classList.contains("edit")) userInputEdit.setAttribute("contenteditable", "false");
         if (userInputEdit.classList.contains("done")) {
             userInputEdit.removeAttribute("contenteditable");
             userInputEdit.classList.remove("edit");
@@ -592,6 +599,8 @@ function addTodo(arr, todoName) {
     todoName.value = "";
     document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
     render(todoList, arr);
+    console.log(arr, "<--- hi there");
+    console.log(todos, "<--- hi there 2");
 }
 function editTodo(id, arr, el) {
     el.setAttribute("contenteditable", true);
@@ -609,14 +618,24 @@ function deleteTodo(arr, id, el) {
     document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
     return todos;
 }
+function deleteAll(arr, elNodeList) {
+    elNodeList.forEach((item)=>{
+        if (item.classList.contains("done")) arr.length = 0;
+        else if (!item.classList.contains("done")) return;
+        document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
+        render(document.querySelector(".todo-list"), arr);
+    });
+    console.log(arr);
+}
 function render(parent, arr) {
     parent.innerHTML = "";
     let li;
     arr.forEach((item)=>{
         li = `<li 
+            contenteditable=${item.done ? "true" : "false"}
             data-todoID=${item.id} 
             class=${item.done ? "done" : ""}
-            contenteditable="true"> ${item.content}</li><button data-btn="edit-btn">Edit Me</button>`;
+            > ${item.content}</li><button data-btn="edit-btn">Edit Me</button>`;
         parent.insertAdjacentHTML("beforeend", li);
     });
 /*     console.log(arr.length);
