@@ -546,19 +546,22 @@ const deleteAllBtn = document.querySelector('button[data-btn="delete-all-btn"]')
 addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
     addTodo(todos);
-    console.log(todos);
+    // console.log(todos);
     getNumberOfTasks(todos);
 });
 deleteAllBtn.addEventListener("click", ()=>{
-    deleteAll(todos, document.querySelectorAll("li.done"));
+    deleteAll(todos, document.querySelectorAll("li.done"), document.querySelector(".done-list"));
 });
 document.addEventListener("dblclick", (e)=>{
-    // const doneList = document.querySelector('.done-list');
+    const doneList = document.querySelector(".done-list");
     const deleteButton = `<button data-btn="delete-btn">Delete!</button>`;
     if (e.target.nodeName === "LI") {
         e.target.classList.add("done");
         e.target.removeAttribute("contenteditable");
-        if (e.target.nextElementSibling) e.target.nextElementSibling.remove();
+        if (e.target.nextElementSibling) //
+        e.target.nextElementSibling.remove();
+        e.target.remove();
+        doneList.appendChild(e.target);
         e.target.insertAdjacentHTML("beforeend", deleteButton);
     }
 });
@@ -585,7 +588,10 @@ document.addEventListener("click", (e)=>{
     if (e.target.dataset.btn === "delete-btn") {
         const id = getId(e.target.parentNode, "todoid");
         // console.log(newTodos);
+        console.log(e.target.parentNode.parentNode);
         deleteTodo(todos, id, e.target.parentNode);
+        document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos) - 1;
+        console.log(e.target.parentNode.parentNode);
     // console.log(id);
     // console.log(todos);
     }
@@ -604,8 +610,8 @@ function addTodo(arr, todoName) {
     todoName.value = "";
     document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
     render(todoList, arr);
-    console.log(arr, "<--- hi there");
-    console.log(todos, "<--- hi there 2");
+// console.log(arr, '<--- hi there');
+// console.log(todos, '<--- hi there 2');
 }
 function editTodo(id, arr, el) {
     el.setAttribute("contenteditable", true);
@@ -614,39 +620,54 @@ function editTodo(id, arr, el) {
     });
 }
 function deleteTodo(arr, id, el) {
-    let newTodos = arr.filter((item)=>{
+    let modifiedTodos = arr.filter((item)=>{
         if (item.id !== id) return item;
         el.remove();
         arr.slice(arr.indexOf(item));
     });
-    todos = newTodos;
+    todos = modifiedTodos;
     document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
+    render(document.querySelector(".todo-list"), todos);
     return todos;
 }
-function deleteAll(arr, elNodeList) {
+function deleteAll(arr, elNodeList, el) {
     elNodeList.forEach((item)=>{
-        if (item.classList.contains("done")) arr.length = 0;
-        else if (!item.classList.contains("done")) return;
+        let modifiedTodos = [
+            arr.splice(arr.indexOf(item), 1)
+        ];
+        if (item.classList.contains("done")) {
+            arr.splice(arr.indexOf(item), modifiedTodos);
+            el.innerHTML = "";
+        // el.parentNode.removeChild(el);
+        } else if (!item.classList.contains("done")) return;
         document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
         render(document.querySelector(".todo-list"), arr);
     });
-    console.log(arr);
 }
 function render(parent, arr) {
     parent.innerHTML = "";
     let li;
+    let displayValue;
     arr.forEach((item)=>{
-        li = `<li 
+        if (item.content !== "") {
+            displayValue = "block";
+            li = `<li 
             contenteditable=${item.done ? "true" : "false"}
             data-todoID=${item.id} 
+            style="display:${displayValue};"
             class=${item.done ? "done" : ""}
             > ${item.content}</li><button data-btn="edit-btn">Edit</button>`;
+        } else {
+            displayValue = "none";
+            li = `<li style="display:${displayValue};"></li>`;
+            document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos) - 1;
+        }
         parent.insertAdjacentHTML("beforeend", li);
     });
 /*     console.log(arr.length);
     console.log(arr); */ }
 function getNumberOfTasks(arr) {
-    console.log(arr.length);
+    // console.log(arr.length);
     return arr.length;
 }
 function getId(element, dataValue) {
@@ -661,7 +682,7 @@ var _uuid = require("uuid");
 const todosModel = [
     {
         id: (0, _uuid.v4)(),
-        content: "random",
+        content: "",
         done: false,
         categories: []
     }
