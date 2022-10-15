@@ -537,6 +537,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 // TODO: use dataset attribute for html
 var _todoModelJs = require("./js/todoModel.js");
 var _todoModelJsDefault = parcelHelpers.interopDefault(_todoModelJs);
+var _utilsJs = require("./utils/utils.js");
 var _uuid = require("uuid");
 let todos = [
     ...(0, _todoModelJsDefault.default)
@@ -545,7 +546,7 @@ const addTodoBtn = document.querySelector("button");
 const deleteAllBtn = document.querySelector('button[data-btn="delete-all-btn"]');
 addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
-    addTodo(todos);
+    (0, _utilsJs.addTodo)(todos);
     // console.log(todos);
     getNumberOfTasks(todos);
 });
@@ -659,7 +660,7 @@ function render(parent, arr) {
             > ${item.content}</li><button data-btn="edit-btn">Edit</button>`;
         } else {
             displayValue = "none";
-            li = `<li style="display:${displayValue};"></li>`;
+            li = `<li data-remove="remove" style="display:${displayValue};"></li>`;
             document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos) - 1;
         }
         parent.insertAdjacentHTML("beforeend", li);
@@ -674,7 +675,7 @@ function getId(element, dataValue) {
     return element.dataset[dataValue];
 }
 
-},{"./js/todoModel.js":"hpFho","uuid":"j4KJi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hpFho":[function(require,module,exports) {
+},{"./js/todoModel.js":"hpFho","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","uuid":"j4KJi","./utils/utils.js":"5sJZc"}],"hpFho":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>todosModel);
@@ -841,6 +842,29 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 exports.default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire9ec0")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5sJZc":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "addTodo", ()=>addTodo);
+var _uuid = require("uuid");
+const addTodo = (arr, todoName)=>{
+    todoName = document.querySelector("input");
+    const todoList = document.querySelector(".todo-list");
+    if (todoName.value === "") return;
+    let newTodo = {
+        id: (0, _uuid.v4)(),
+        content: todoName.value,
+        done: false,
+        categories: []
+    };
+    todos.push(newTodo);
+    todoName.value = "";
+    document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
+    render(todoList, arr);
+// console.log(arr, '<--- hi there');
+// console.log(todos, '<--- hi there 2');
+};
+
+},{"uuid":"j4KJi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire9ec0")
 
 //# sourceMappingURL=index.975ef6c8.js.map

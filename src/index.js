@@ -2,6 +2,7 @@
 // TODO: use dataset attribute for html
 
 import todoModel from './js/todoModel.js';
+import { addTodo } from './utils/utils.js';
 import { v4 as uuidv4 } from 'uuid';
 
 let todos = [...todoModel];
@@ -161,7 +162,7 @@ function render(parent, arr) {
             > ${item.content}</li><button data-btn="edit-btn">Edit</button>`;
         } else {
             displayValue = 'none';
-            li = `<li style="display:${displayValue};"></li>`;
+            li = `<li data-remove="remove" style="display:${displayValue};"></li>`;
             document.querySelector('.current-tasks').textContent =
                 getNumberOfTasks(todos) - 1;
         }
