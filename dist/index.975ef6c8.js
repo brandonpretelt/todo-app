@@ -533,8 +533,14 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"8lqZg":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-// TODO: write render function when it's time
-// TODO: use dataset attribute for html
+// TODO: add categories
+// ? Description of categories
+// ? add a button that, when clicked, shows a user input box (text box or list of pregenerated categories*)
+// ? and the user can type in a category  (or filter an existing category per the second option above*)
+// ? from there, add a filter icon button and add a modal to pick which category (or categories) to display
+// ? in the UI
+// -- TODO: write render function when it's time
+// -- TODO: use dataset attribute for html
 var _todoModelJs = require("./js/todoModel.js");
 var _todoModelJsDefault = parcelHelpers.interopDefault(_todoModelJs);
 var _uuid = require("uuid");

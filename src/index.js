@@ -1,5 +1,12 @@
-// TODO: write render function when it's time
-// TODO: use dataset attribute for html
+// TODO: add categories
+// ? Description of categories
+// ? add a button that, when clicked, shows a user input box (text box or list of pregenerated categories*)
+// ? and the user can type in a category  (or filter an existing category per the second option above*)
+// ? from there, add a filter icon button and add a modal to pick which category (or categories) to display
+// ? in the UI
+
+// -- TODO: write render function when it's time
+// -- TODO: use dataset attribute for html
 
 import todoModel from './js/todoModel.js';
 import { v4 as uuidv4 } from 'uuid';
