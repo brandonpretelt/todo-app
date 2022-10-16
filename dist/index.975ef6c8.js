@@ -537,7 +537,6 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 // TODO: use dataset attribute for html
 var _todoModelJs = require("./js/todoModel.js");
 var _todoModelJsDefault = parcelHelpers.interopDefault(_todoModelJs);
-var _utilsJs = require("./utils/utils.js");
 var _uuid = require("uuid");
 let todos = [
     ...(0, _todoModelJsDefault.default)
@@ -546,30 +545,31 @@ const addTodoBtn = document.querySelector("button");
 const deleteAllBtn = document.querySelector('button[data-btn="delete-all-btn"]');
 addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
-    (0, _utilsJs.addTodo)(todos);
-    // console.log(todos);
+    addTodo(todos);
     getNumberOfTasks(todos);
 });
 deleteAllBtn.addEventListener("click", ()=>{
     deleteAll(todos, document.querySelectorAll("li.done"), document.querySelector(".done-list"));
 });
 document.addEventListener("dblclick", (e)=>{
-    const doneList = document.querySelector(".done-list");
+    /* line 39: I might not need this but, I'll keep it here just in case
+
+            if (e.target.nextElementSibling) {
+            e.target.nextElementSibling.remove();
+        } */ const doneList = document.querySelector(".done-list");
     const deleteButton = `<button data-btn="delete-btn">Delete!</button>`;
     if (e.target.nodeName === "LI") {
-        e.target.classList.add("done");
-        e.target.removeAttribute("contenteditable");
-        if (e.target.nextElementSibling) //
-        e.target.nextElementSibling.remove();
-        e.target.remove();
-        doneList.appendChild(e.target);
-        e.target.insertAdjacentHTML("beforeend", deleteButton);
+        const li = e.target;
+        li.classList.add("done");
+        li.removeAttribute("contenteditable");
+        li.nextElementSibling.remove();
+        li.remove();
+        doneList.appendChild(li);
+        li.insertAdjacentHTML("afterend", deleteButton);
     }
 });
 document.addEventListener("click", (e)=>{
-    const todoList = document.querySelector(".todo-list");
-    const editBtn = e.target.dataset.btn;
-    if (editBtn === "edit-btn") {
+    if (e.target.dataset.btn === "edit-btn") {
         const userInputEdit = e.target.previousElementSibling;
         if (e.target.hasAttribute("data-btn")) {
             const todoId = getId(userInputEdit, "todoid");
@@ -587,14 +587,14 @@ document.addEventListener("click", (e)=>{
         }
     }
     if (e.target.dataset.btn === "delete-btn") {
-        const id = getId(e.target.parentNode, "todoid");
-        // console.log(newTodos);
-        console.log(e.target.parentNode.parentNode);
-        deleteTodo(todos, id, e.target.parentNode);
+        const li = e.target.previousElementSibling;
+        const id = getId(e.target.previousElementSibling, "todoid");
+        deleteTodo(todos, id, e.target.previousElementSibling);
         document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos) - 1;
-        console.log(e.target.parentNode.parentNode);
-    // console.log(id);
-    // console.log(todos);
+        if (getNumberOfTasks(todos) > 0 || getNumberOfTasks(todos) < 1) {
+            e.target.remove();
+            e.target.parentNode.innerHTML = "";
+        }
     }
 });
 function addTodo(arr, todoName) {
@@ -611,8 +611,6 @@ function addTodo(arr, todoName) {
     todoName.value = "";
     document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
     render(todoList, arr);
-// console.log(arr, '<--- hi there');
-// console.log(todos, '<--- hi there 2');
 }
 function editTodo(id, arr, el) {
     el.setAttribute("contenteditable", true);
@@ -628,7 +626,6 @@ function deleteTodo(arr, id, el) {
     });
     todos = modifiedTodos;
     document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
-    render(document.querySelector(".todo-list"), todos);
     return todos;
 }
 function deleteAll(arr, elNodeList, el) {
@@ -639,7 +636,6 @@ function deleteAll(arr, elNodeList, el) {
         if (item.classList.contains("done")) {
             arr.splice(arr.indexOf(item), modifiedTodos);
             el.innerHTML = "";
-        // el.parentNode.removeChild(el);
         } else if (!item.classList.contains("done")) return;
         document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
         render(document.querySelector(".todo-list"), arr);
@@ -657,7 +653,8 @@ function render(parent, arr) {
             data-todoID=${item.id} 
             style="display:${displayValue};"
             class=${item.done ? "done" : ""}
-            > ${item.content}</li><button data-btn="edit-btn">Edit</button>`;
+            > ${item.content}</li>
+            <button data-btn="edit-btn">Edit</button>`;
         } else {
             displayValue = "none";
             li = `<li data-remove="remove" style="display:${displayValue};"></li>`;
@@ -665,17 +662,15 @@ function render(parent, arr) {
         }
         parent.insertAdjacentHTML("beforeend", li);
     });
-/*     console.log(arr.length);
-    console.log(arr); */ }
+}
 function getNumberOfTasks(arr) {
-    // console.log(arr.length);
     return arr.length;
 }
 function getId(element, dataValue) {
     return element.dataset[dataValue];
 }
 
-},{"./js/todoModel.js":"hpFho","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","uuid":"j4KJi","./utils/utils.js":"5sJZc"}],"hpFho":[function(require,module,exports) {
+},{"./js/todoModel.js":"hpFho","uuid":"j4KJi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hpFho":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>todosModel);
@@ -842,29 +837,6 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 exports.default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5sJZc":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "addTodo", ()=>addTodo);
-var _uuid = require("uuid");
-const addTodo = (arr, todoName)=>{
-    todoName = document.querySelector("input");
-    const todoList = document.querySelector(".todo-list");
-    if (todoName.value === "") return;
-    let newTodo = {
-        id: (0, _uuid.v4)(),
-        content: todoName.value,
-        done: false,
-        categories: []
-    };
-    todos.push(newTodo);
-    todoName.value = "";
-    document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
-    render(todoList, arr);
-// console.log(arr, '<--- hi there');
-// console.log(todos, '<--- hi there 2');
-};
-
-},{"uuid":"j4KJi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire9ec0")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire9ec0")
 
 //# sourceMappingURL=index.975ef6c8.js.map

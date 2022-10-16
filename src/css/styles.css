@@ -108,7 +108,7 @@ li>button {
 
 li>button {
     margin-left: 1em;
-    background-color: #fff;
+    /* background-color: #fff; */
 }
 
 .edit {
