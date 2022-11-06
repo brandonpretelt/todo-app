@@ -12,8 +12,9 @@ import todoModel from './js/todoModel.js';
 import { v4 as uuidv4 } from 'uuid';
 
 let todos = [...todoModel];
+let categories = [];
 
-const addTodoBtn = document.querySelector('button');
+const addTodoBtn = document.querySelector('button[data-btn="add-todo-btn"]');
 const deleteAllBtn = document.querySelector(
     'button[data-btn="delete-all-btn"]'
 );
@@ -79,29 +80,61 @@ document.addEventListener('click', (e) => {
             getNumberOfTasks(todos) - 1;
         if (getNumberOfTasks(todos) > 0 || getNumberOfTasks(todos) < 1) {
             e.target.remove();
-            e.target.parentNode.innerHTML = '';
+            if (e.target.parentNode) {
+                e.target.parentNode.innerHTML = '';
+            }
         }
     }
 });
 
+document.addEventListener('click', (e) => {
+    if (e.target.nodeName === 'A') {
+        e.preventDefault();
+        filterByCategory(categories, e.target.dataset.id);
+    }
+});
+
+function filterByCategory(arr, categoryLabel) {
+    arr.filter((item) => {
+        if (item === categoryLabel) {
+            render(document.querySelector('.categories-list'), categories);
+        }
+    });
+}
+
 function addTodo(arr, todoName) {
-    todoName = document.querySelector('input');
+    todoName = document.querySelector('#todo-form input');
     const todoList = document.querySelector('.todo-list');
+    const category = document.querySelector('#category-form input');
+    let newTodo;
     if (todoName.value === '') return;
 
-    let newTodo = {
-        id: uuidv4(),
-        content: todoName.value,
-        done: false,
-        categories: []
-    };
+    if (category.value !== '') {
+        newTodo = {
+            id: uuidv4(),
+            content: todoName.value,
+            done: false,
+            categories: [category.value]
+        };
+    } else {
+        newTodo = {
+            id: uuidv4(),
+            content: todoName.value,
+            done: false,
+            categories: []
+        };
+    }
 
     todos.push(newTodo);
+    categories.push(newTodo.categories.join(' '));
+    console.log(categories);
 
     todoName.value = '';
+    category.value = '';
     document.querySelector('.current-tasks').textContent =
         getNumberOfTasks(todos);
     render(todoList, arr);
+    renderCategories(document.querySelector('.categories-list'), categories);
 }
 
 function editTodo(id, arr, el) {
@@ -143,6 +176,16 @@ function deleteAll(arr, elNodeList, el) {
         document.querySelector('.current-tasks').textContent =
             getNumberOfTasks(todos);
         render(document.querySelector('.todo-list'), arr);
+    });
+}
+
+function renderCategories(parent, arr) {
+    parent.innerHTML = '';
+    let li;
+    arr.forEach((item) => {
+        if (item === '') return;
+        li = `<li><a data-id="${item}" href="#">${item}</a></li>`;
+        parent.insertAdjacentHTML('beforeend', li);
     });
 }
 

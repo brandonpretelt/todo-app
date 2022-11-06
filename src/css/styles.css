@@ -33,22 +33,43 @@ main div {
     padding: 1em;
 }
 
-div form {
+div #todo-form {
     display: flex;
     flex-direction: column;
 }
 
-form input,
+#todo-form input,
 label {
     font-size: 1rem;
 }
 
-form input {
-    margin: 2em 0;
-    padding: 0.5em 1em;
+#todo-form input,
+#category-form input {
     border: none;
     border-radius: 3px;
+}
+
+#category-form {
+    display: flex;
+    flex-direction: column;
+
+}
+
+#todo-form input {
+    margin: 2em 0;
+    padding: 0.5em 1em;
     font-family: 'Rock Salt', system-ui, sans-serif;
+}
+
+#category-form input {
+    margin: 1em 0;
+    padding: 0.5em;
+    width: 50%;
+}
+
+#category-form button {
+    width: 50%;
+    padding: 0.5em;
 }
 
 ul {
@@ -56,7 +77,8 @@ ul {
 
 }
 
-li {
+.todo-list li,
+.done-list li {
     margin-top: 1em;
     padding: 1em;
     width: 100%;
@@ -118,4 +140,33 @@ li>button {
 
 .done {
     text-decoration: line-through;
+}
+
+.categories-list {
+    display: flex;
+    gap: 1em;
+}
+
+.categories-list>li {
+    background-color: #fff;
+    padding: .25em .75em;
+    border-radius: 40px;
+}
+
+.categories-list>li:hover,
+.categories-list li a:hover {
+    background-color: rgba(255, 255, 255, 0.852);
+}
+
+.categories-list li a {
+    color: #222;
+    text-decoration: none;
+}
+
+/* GRID */
+.lists {
+    display: grid;
+    margin: unset;
+    padding: unset;
+    grid-template-columns: repeat(2, 1fr);
 }

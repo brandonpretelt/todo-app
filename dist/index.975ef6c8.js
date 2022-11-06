@@ -547,7 +547,8 @@ var _uuid = require("uuid");
 let todos = [
     ...(0, _todoModelJsDefault.default)
 ];
-const addTodoBtn = document.querySelector("button");
+let categories = [];
+const addTodoBtn = document.querySelector('button[data-btn="add-todo-btn"]');
 const deleteAllBtn = document.querySelector('button[data-btn="delete-all-btn"]');
 addTodoBtn.addEventListener("click", (e)=>{
     e.preventDefault();
@@ -599,24 +600,49 @@ document.addEventListener("click", (e)=>{
         document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos) - 1;
         if (getNumberOfTasks(todos) > 0 || getNumberOfTasks(todos) < 1) {
             e.target.remove();
-            e.target.parentNode.innerHTML = "";
+            if (e.target.parentNode) e.target.parentNode.innerHTML = "";
         }
     }
 });
+document.addEventListener("click", (e)=>{
+    if (e.target.nodeName === "A") {
+        e.preventDefault();
+        filterByCategory(categories, e.target.dataset.id);
+    }
+});
+function filterByCategory(arr, categoryLabel) {
+    arr.filter((item)=>{
+        if (item === categoryLabel) render(document.querySelector(".categories-list"), categories);
+    });
+}
 function addTodo(arr, todoName) {
-    todoName = document.querySelector("input");
+    todoName = document.querySelector("#todo-form input");
     const todoList = document.querySelector(".todo-list");
+    const category = document.querySelector("#category-form input");
+    let newTodo;
     if (todoName.value === "") return;
-    let newTodo = {
+    if (category.value !== "") newTodo = {
+        id: (0, _uuid.v4)(),
+        content: todoName.value,
+        done: false,
+        categories: [
+            category.value
+        ]
+    };
+    else newTodo = {
         id: (0, _uuid.v4)(),
         content: todoName.value,
         done: false,
         categories: []
     };
     todos.push(newTodo);
+    categories.push(newTodo.categories.join(" "));
+    console.log(categories);
     todoName.value = "";
+    category.value = "";
     document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
     render(todoList, arr);
+    renderCategories(document.querySelector(".categories-list"), categories);
 }
 function editTodo(id, arr, el) {
     el.setAttribute("contenteditable", true);
@@ -645,6 +671,15 @@ function deleteAll(arr, elNodeList, el) {
         } else if (!item.classList.contains("done")) return;
         document.querySelector(".current-tasks").textContent = getNumberOfTasks(todos);
         render(document.querySelector(".todo-list"), arr);
+    });
+}
+function renderCategories(parent, arr) {
+    parent.innerHTML = "";
+    let li;
+    arr.forEach((item)=>{
+        if (item === "") return;
+        li = `<li><a data-id="${item}" href="#">${item}</a></li>`;
+        parent.insertAdjacentHTML("beforeend", li);
     });
 }
 function render(parent, arr) {

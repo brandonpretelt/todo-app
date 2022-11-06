@@ -17,28 +17,43 @@
     <div class="container">
         <header>
             <h1> To Do App </h1>
-
         </header>
         <main>
+            <div class="categories-box">
+                <h4> Categories </h4>
+                <nav>
+                    <ul class="categories-list"></ul>
+                </nav>
+            </div>
             <h2> Add A Task </h2>
             <p> To mark a task as done, please double click on the item </p>
+            <div>
+                <span> Add a category: </span>
+                <form id="category-form">
+                    <input type="text" placeholder="category...">
+                </form>
+            </div>
             <div class="form-container todo-box">
-                <form>
+                <form id="todo-form">
                     <label for="todo-item">Todo:
                         <input type="text" name="todo-item" id="todo-item" placeholder="add your item...">
                     </label>
-                    <button type="click">Add task!</button>
+                    <button type="click" data-btn="add-todo-btn">Add task!</button>
                 </form>
             </div>
             <div class="list-container">
+
                 <div class="lists">
-                    <h3> On Going: </h3>
-                    <ul class="todo-list">
+                    <div class="todo-container">
+                        <h3> On Going: </h3>
+                        <ul class="todo-list">
+                        </ul>
+                    </div>
+                    <div class="completed-container">
+                        <h3> Completed: </h3>
+                        <ul class="done-list"></ul>
 
-                    </ul>
-
-                    <h3> Completed: </h3>
-                    <ul class="done-list"></ul>
+                    </div>
                 </div>
                 <h3> Current Tasks: <span class="current-tasks"></span></h3>
                 <button data-btn="delete-all-btn"> Delete All </button>
